@@ -14,6 +14,7 @@
   "dependencies": {
     "@prisma/client": "^5.1.1",
     "@t3-oss/env-nextjs": "^0.7.0",
+    "clsx": "^2.0.0",
     "next": "^13.5.4",
     "react": "18.2.0",
     "react-dom": "18.2.0",

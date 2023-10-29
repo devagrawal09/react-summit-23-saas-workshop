@@ -20,7 +20,14 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`font-sans ${inter.variable}`}>{children}</body>
+      <body className={`font-sans ${inter.variable}`}>
+        <div
+          className={`flex justify-between gap-5 px-5 py-2 ${inter.className}`}
+        >
+          Hello there, Stranger
+        </div>
+        {children}
+      </body>
     </html>
   );
 }
