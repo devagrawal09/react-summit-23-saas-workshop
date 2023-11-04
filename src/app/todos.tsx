@@ -52,7 +52,7 @@ export function TodoComponent({
     <div className="todo flex items-center gap-4 border-b px-2 py-1">
       <input
         type="checkbox"
-        defaultChecked={todo.completed}
+        checked={todo.completed}
         onChange={() => onToggle()}
         className="h-5 w-5"
       />

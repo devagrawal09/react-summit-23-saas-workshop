@@ -16,4 +16,6 @@ model Todo {
     updatedAt DateTime @updatedAt
     title     String
     completed Boolean  @default(false)
+    userId    String
+    orgId     String?
 }

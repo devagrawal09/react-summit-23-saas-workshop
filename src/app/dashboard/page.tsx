@@ -1,16 +1,28 @@
 import { revalidatePath } from "next/cache";
-import { AddTodoComponent, TodoComponent, type Todo } from "./todos";
+import { AddTodoComponent, TodoComponent } from "../todos";
 import { db } from "~/server/db";
+import { auth } from "@clerk/nextjs";
+import { redirect } from "next/navigation";
 
 export default async function HomePage() {
-  const todos = await db.todo.findMany({
-    orderBy: { createdAt: "desc" },
-  });
+  const { userId, orgId } = auth();
+
+  if (!userId) redirect("/");
+
+  const todos = orgId
+    ? await db.todo.findMany({
+        where: { orgId },
+        orderBy: { createdAt: "desc" },
+      })
+    : await db.todo.findMany({
+        where: { userId, orgId: null },
+        orderBy: { createdAt: "desc" },
+      });
 
   return (
     <main>
       <h1 className="text-center text-6xl italic text-[#ef4444]">todos</h1>
-      <div className="card-shadow m-auto w-1/2 min-w-[400px] rounded-lg border border-solid border-gray-300 bg-white ">
+      <div className="card-shadow m-auto w-1/2 min-w-[400px] rounded-lg border border-solid border-gray-300 bg-white">
         <AddTodoComponent
           addTodo={async (title: string) => {
             "use server";
@@ -19,6 +31,8 @@ export default async function HomePage() {
               data: {
                 title,
                 completed: false,
+                userId,
+                orgId,
               },
             });
 
@@ -34,7 +48,7 @@ export default async function HomePage() {
                 "use server";
 
                 await db.todo.update({
-                  where: { id: todo.id },
+                  where: { id: todo.id, userId, orgId },
                   data: { completed: !todo.completed },
                 });
 
@@ -43,7 +57,7 @@ export default async function HomePage() {
               onDelete={async () => {
                 "use server";
 
-                await db.todo.delete({ where: { id: todo.id } });
+                await db.todo.delete({ where: { id: todo.id, userId, orgId } });
 
                 revalidatePath("/");
               }}
