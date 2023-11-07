@@ -5,7 +5,7 @@ import clsx from "clsx";
 export type Task = {
   completed: boolean;
   title: string;
-  id: string;
+  id: number;
 };
 
 export function TodosComponent({ tasks }: { tasks: Task[] }) {

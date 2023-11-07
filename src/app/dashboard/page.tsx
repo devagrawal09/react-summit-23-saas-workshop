@@ -3,12 +3,12 @@ import { TodosComponent, Task } from "../todos";
 export default function HomePage() {
   const tasks: Task[] = [
     {
-      id: "1",
+      id: 1,
       title: "Initialize Project",
       completed: true,
     },
     {
-      id: "2",
+      id: 2,
       title: "Create Todo App",
       completed: false,
     },
