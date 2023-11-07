@@ -1,7 +1,7 @@
-import { AddTodoComponent, Task, TaskComponent } from "../todos";
+import { AddTodoComponent, Todo, TodoComponent } from "../todos";
 
 export default function HomePage() {
-  const tasks: Task[] = [
+  const todos: Todo[] = [
     {
       id: 1,
       title: "Initialize Project",
@@ -20,11 +20,11 @@ export default function HomePage() {
       <div className="card-shadow m-auto w-1/2 min-w-[400px] rounded-lg border border-solid border-gray-300 bg-white ">
         <AddTodoComponent />
 
-        {tasks?.length ? (
-          tasks.map((task) => <TaskComponent task={task} key={task.id} />)
+        {todos?.length ? (
+          todos.map((todo) => <TodoComponent todo={todo} key={todo.id} />)
         ) : (
           <div className="flex">
-            <div className="px-3 py-2 text-gray-500">No tasks found</div>
+            <div className="px-3 py-2 text-gray-500">No todos found</div>
           </div>
         )}
       </div>

@@ -2,15 +2,15 @@
 
 import clsx from "clsx";
 
-export type Task = {
+export type Todo = {
   completed: boolean;
   title: string;
   id: number;
 };
 
 export function AddTodoComponent() {
-  async function addTask(title: string) {
-    console.log(`Adding task: ${title}`);
+  async function addTodo(title: string) {
+    console.log(`Adding todo: ${title}`);
   }
 
   return (
@@ -22,7 +22,7 @@ export function AddTodoComponent() {
           const formData = new FormData(form);
           const title = formData.get("title") as string;
 
-          await addTask(title);
+          await addTodo(title);
 
           form.reset();
         }}
@@ -40,24 +40,24 @@ export function AddTodoComponent() {
   );
 }
 
-export function TaskComponent({ task }: { task: Task }) {
-  async function toggleCompleted(task: Task) {}
+export function TodoComponent({ todo }: { todo: Todo }) {
+  async function toggleCompleted(todo: Todo) {}
 
-  async function deleteTask(task: Task) {}
+  async function deleteTodo(todo: Todo) {}
 
   return (
     <div className="todo flex items-center gap-4 border-b px-2 py-1">
       <input
         type="checkbox"
-        checked={task.completed}
-        onChange={() => toggleCompleted(task)}
+        checked={todo.completed}
+        onChange={() => toggleCompleted(todo)}
         className="h-5 w-5"
       />
-      <span className={clsx("grow p-1", task.completed && "line-through")}>
-        {task.title}
+      <span className={clsx("grow p-1", todo.completed && "line-through")}>
+        {todo.title}
       </span>
       <button
-        onClick={() => deleteTask(task)}
+        onClick={() => deleteTodo(todo)}
         className="text-md rounded-full border border-none bg-white px-4 py-2 font-sans font-medium text-white hover:bg-gray-200 hover:text-inherit"
       >
         x
