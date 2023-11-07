@@ -8,13 +8,24 @@ export type Task = {
   id: number;
 };
 
-export function TodosComponent({ tasks }: { tasks: Task[] }) {
-  async function addTask() {}
+export function AddTodoComponent() {
+  async function addTask(title: string) {
+    console.log(`Adding task: ${title}`);
+  }
 
   return (
     <>
       <form
-        onSubmit={addTask}
+        onSubmit={async (e) => {
+          e.preventDefault();
+          const form = e.currentTarget;
+          const formData = new FormData(form);
+          const title = formData.get("title") as string;
+
+          await addTask(title);
+
+          form.reset();
+        }}
         className="todo flex items-center border border-b border-solid px-2 py-1"
       >
         <input
@@ -25,19 +36,11 @@ export function TodosComponent({ tasks }: { tasks: Task[] }) {
           Add
         </button>
       </form>
-
-      {tasks?.length ? (
-        tasks.map((task) => <TaskComponent task={task} key={task.id} />)
-      ) : (
-        <div className="flex">
-          <div className="px-3 py-2 text-gray-500">No tasks found</div>
-        </div>
-      )}
     </>
   );
 }
 
-function TaskComponent({ task }: { task: Task }) {
+export function TaskComponent({ task }: { task: Task }) {
   async function toggleCompleted(task: Task) {}
 
   async function deleteTask(task: Task) {}
