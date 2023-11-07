@@ -1,5 +1,4 @@
-import Link from "next/link";
-import { TodosComponent, Task } from "./todos";
+import { TodosComponent, Task } from "../todos";
 
 export default function HomePage() {
   const tasks: Task[] = [
