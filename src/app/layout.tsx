@@ -3,15 +3,19 @@ import "~/styles/globals.css";
 import { Inter } from "next/font/google";
 import {
   ClerkProvider,
-  OrganizationSwitcher,
   SignInButton,
   SignedIn,
   SignedOut,
-  UserButton,
   auth,
+  clerkClient,
+  currentUser,
 } from "@clerk/nextjs";
-import { redirect } from "next/navigation";
-import { CheckoutButton } from "./api/stripe/client";
+import {
+  CustomOrganizationSwitcher,
+  CustomUserButton,
+  DowngradeHandler,
+} from "./plan";
+import { StripeCheckout } from "./api/stripe/server";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -29,6 +33,11 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const { sessionClaims, userId, orgId = "" } = auth();
+
+  const personalPlan = sessionClaims?.publicMetadata?.plan || "free";
+  const orgPlan = sessionClaims?.orgMetadata?.plan || "free";
+
   return (
     <ClerkProvider>
       <html lang="en">
@@ -46,9 +55,72 @@ export default function RootLayout({
             </SignedOut>
             <SignedIn>
               <div className="flex gap-4">
-                <CheckoutButton />
-                <OrganizationSwitcher />
-                <UserButton afterSignOutUrl="/" />
+                <CustomOrganizationSwitcher
+                  PlanPage={
+                    <div>
+                      <h3 className="text-3xl font-semibold">Plans</h3>
+                      <p className=" text-gray-600">
+                        Manage your subscription plans
+                      </p>
+                      <h4 className="mt-8 border-b py-1">
+                        Organization subscription
+                      </h4>
+                      <p className="my-1 px-4 py-2">
+                        You are currently on the{" "}
+                        {orgPlan === "free" ? "free" : "pro"} plan.
+                      </p>
+                      {orgPlan === "paid" ? (
+                        <DowngradeButton className="my-1 rounded border bg-gray-50 px-4 py-2 transition duration-100 hover:bg-red-500 hover:text-white" />
+                      ) : (
+                        <StripeCheckout
+                          metadata={{ orgId }}
+                          membership_price={50_00}
+                          className="my-1 rounded border bg-gray-50 px-4 py-2 transition duration-100 hover:bg-blue-600 hover:text-white"
+                        >
+                          Upgrade to Org Pro for $50/month
+                        </StripeCheckout>
+                      )}
+                    </div>
+                  }
+                />
+                <CustomUserButton
+                  PlanPage={
+                    <div>
+                      <h3 className="text-3xl font-semibold">Plans</h3>
+                      <p className=" text-gray-600">
+                        Manage your subscription plans
+                      </p>
+                      <h4 className="mt-8 border-b py-1">
+                        Personal subscription
+                      </h4>
+                      <p className="my-1 px-4 py-2">
+                        You are currently on the{" "}
+                        {personalPlan === "free" ? "free" : "pro"} plan.
+                      </p>
+                      {personalPlan === "paid" ? (
+                        <DowngradeButton className="my-1 rounded border bg-gray-50 px-4 py-2 transition duration-100 hover:bg-red-500 hover:text-white" />
+                      ) : (
+                        <StripeCheckout
+                          membership_price={10_00}
+                          className="my-1 rounded border bg-gray-50 px-4 py-2 transition duration-100 hover:bg-blue-600 hover:text-white"
+                          metadata={{ userId }}
+                        >
+                          Upgrade to Pro for $10/month
+                        </StripeCheckout>
+                      )}
+                      <h4 className="mt-8 border-b py-1">
+                        Organization subscription
+                      </h4>
+                      <p className="my-1 px-4 py-2">
+                        You are currently on the{" "}
+                        {orgPlan === "free" ? "free" : "pro"} plan.
+                      </p>
+                      <p>
+                        Go to your Organization Profile to manage this plan.
+                      </p>
+                    </div>
+                  }
+                />
               </div>
             </SignedIn>
           </div>
@@ -56,5 +128,35 @@ export default function RootLayout({
         </body>
       </html>
     </ClerkProvider>
+  );
+}
+
+function DowngradeButton(props: { className?: string }) {
+  async function downgradeUser() {
+    "use server";
+    console.log("downgrading user");
+    const user = await currentUser();
+    if (!user) {
+      throw new Error("No user found");
+    }
+
+    const { plan } = user.publicMetadata;
+    if (plan === "free") {
+      throw new Error("User is already on the free plan");
+    }
+
+    const res = await clerkClient.users.updateUserMetadata(user.id, {
+      publicMetadata: { plan: "free" },
+    });
+
+    console.log({ res });
+
+    return true;
+  }
+  return (
+    <DowngradeHandler
+      className={props.className}
+      downgradeUser={downgradeUser}
+    />
   );
 }

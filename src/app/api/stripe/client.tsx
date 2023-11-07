@@ -1,10 +1,10 @@
 "use client";
 
-import { Stripe, loadStripe } from "@stripe/stripe-js";
+import { Stripe as StripeClient, loadStripe } from "@stripe/stripe-js";
 import { useState } from "react";
-import { createStripeSession } from "./action";
+import type S from "stripe";
 
-let stripePromise: Promise<Stripe | null>;
+let stripePromise: Promise<StripeClient | null>;
 const getStripe = () => {
   if (!stripePromise) {
     stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
@@ -12,18 +12,18 @@ const getStripe = () => {
   return stripePromise;
 };
 
-export function CheckoutButton() {
+export function CheckoutButton(props: {
+  createStripeSession(): Promise<S.Response<S.Checkout.Session> | undefined>;
+  className?: string;
+  children?: React.ReactNode;
+}) {
   const [loading, setLoading] = useState(false);
 
   return (
     <button
       onClick={async () => {
         setLoading(true);
-        const session = await createStripeSession({
-          quantity: 1,
-          unit_amount: 100,
-        });
-        console.log({ session });
+        const session = await props.createStripeSession();
 
         if (!session) {
           alert("Could not create session");
@@ -44,8 +44,9 @@ export function CheckoutButton() {
         }
       }}
       disabled={loading}
+      className={`rounded bg-blue-300 p-2 px-4 ${props.className}`}
     >
-      {loading ? "Loading..." : "Checkout"}
+      {props.children ?? "Upgrade"}
     </button>
   );
 }
