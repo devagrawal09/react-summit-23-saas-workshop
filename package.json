@@ -12,10 +12,11 @@
     "start": "next start"
   },
   "dependencies": {
+    "@clerk/nextjs": "^4.26.2",
     "@prisma/client": "^5.1.1",
     "@t3-oss/env-nextjs": "^0.7.0",
     "clsx": "^2.0.0",
-    "next": "^13.5.4",
+    "next": "^14.0.1",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "zod": "^3.22.4"
