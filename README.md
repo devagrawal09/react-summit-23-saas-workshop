@@ -16,6 +16,14 @@ cd react-summit-23-saas-workshop
 bun install
 ```
 
+## Environment Setup
+
+Sign up for an account on:
+* [Clerk](https://clerk.com)
+* [Vercel](https://vercel.com)
+* [PlanetScale](https://planetscale.com)
+* [Stripe](https://stripe.com)
+
 ## Running the app
 
 ```bash
