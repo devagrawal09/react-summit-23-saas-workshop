@@ -16,15 +16,15 @@ export default function HomePage() {
 
   return (
     <main>
-      <h1 className="text-center text-6xl italic text-[#ef4444]">todos</h1>
-      <div className="card-shadow m-auto w-1/2 min-w-[400px] rounded-lg border border-solid border-gray-300 bg-white ">
+      <h1 className="todos-title">todos</h1>
+      <div className="todos-card">
         <AddTodoComponent />
 
         {todos?.length ? (
           todos.map((todo) => <TodoComponent todo={todo} key={todo.id} />)
         ) : (
           <div className="flex">
-            <div className="px-3 py-2 text-gray-500">No todos found</div>
+            <div className="todos-text">No todos found</div>
           </div>
         )}
       </div>

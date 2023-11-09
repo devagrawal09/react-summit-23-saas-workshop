@@ -26,15 +26,10 @@ export function AddTodoComponent() {
 
           form.reset();
         }}
-        className="todo flex items-center border border-b border-solid px-2 py-1"
+        className="todos-form"
       >
-        <input
-          placeholder="What needs to be done?"
-          className="w-full p-1 outline-none placeholder:italic"
-        />
-        <button className="text-md rounded-full border border-none bg-white px-4 py-2 font-sans font-medium text-white hover:bg-gray-200 hover:text-inherit">
-          Add
-        </button>
+        <input placeholder="What needs to be done?" className="todos-input" />
+        <button className="todos-add">Add</button>
       </form>
     </>
   );
@@ -46,7 +41,7 @@ export function TodoComponent({ todo }: { todo: Todo }) {
   async function deleteTodo(todo: Todo) {}
 
   return (
-    <div className="todo flex items-center gap-4 border-b px-2 py-1">
+    <div className="todos-todo">
       <input
         type="checkbox"
         checked={todo.completed}
@@ -56,10 +51,7 @@ export function TodoComponent({ todo }: { todo: Todo }) {
       <span className={clsx("grow p-1", todo.completed && "line-through")}>
         {todo.title}
       </span>
-      <button
-        onClick={() => deleteTodo(todo)}
-        className="text-md rounded-full border border-none bg-white px-4 py-2 font-sans font-medium text-white hover:bg-gray-200 hover:text-inherit"
-      >
+      <button onClick={() => deleteTodo(todo)} className="todo-delete">
         x
       </button>
     </div>

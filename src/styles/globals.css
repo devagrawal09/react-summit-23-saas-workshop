@@ -1,3 +1,44 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer components {
+  .greeting {
+    @apply flex justify-between gap-5 px-5 py-2;
+  }
+  .todos-title {
+    @apply text-center text-6xl italic text-[#ef4444];
+  }
+
+  .todos-card {
+    @apply m-auto w-1/2 min-w-[400px] rounded-lg border border-solid border-gray-300 bg-white;
+  }
+
+  .todos-text {
+    @apply px-3 py-2 text-gray-500;
+  }
+
+  .todos-form {
+    @apply flex items-center border border-b border-solid px-2 py-1;
+  }
+
+  .todos-input {
+    @apply w-full p-1 outline-none placeholder:italic;
+  }
+
+  .todos-add {
+    @apply rounded-full border border-none bg-white px-4 py-2 font-sans font-medium text-white hover:bg-gray-200 hover:text-inherit
+  }
+
+  .todos-todo {
+    @apply flex items-center gap-4 border-b px-2 py-1;
+  }
+
+  .todo-delete {
+    @apply rounded-full border border-none bg-white px-4 py-2 font-sans font-medium text-white hover:bg-gray-200 hover:text-inherit;
+  }
+
+  .todo-title {
+    @apply grow p-1;
+  }
+}
