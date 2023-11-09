@@ -1,9 +1,16 @@
 import { db } from "~/server/db";
 import { AddTodoComponent, TodoComponent } from "../todos";
 import { revalidatePath } from "next/cache";
+import { auth } from "@clerk/nextjs";
 
 export default async function DashboardPage() {
-  const todos = await db.todo.findMany();
+  const { userId } = auth();
+
+  if (!userId) throw new Error("Must be logged in");
+
+  const todos = await db.todo.findMany({
+    where: { userId },
+  });
 
   return (
     <main>
@@ -13,8 +20,12 @@ export default async function DashboardPage() {
           addTodo={async (title) => {
             "use server";
 
+            const { userId } = auth();
+
+            if (!userId) throw new Error("Must be logged in");
+
             await db.todo.create({
-              data: { title, completed: false },
+              data: { title, completed: false, userId },
             });
 
             revalidatePath("/dashboard");
@@ -29,8 +40,12 @@ export default async function DashboardPage() {
               toggleCompleted={async (todo) => {
                 "use server";
 
+                const { userId } = auth();
+
+                if (!userId) throw new Error("Must be logged in");
+
                 await db.todo.update({
-                  where: { id: todo.id },
+                  where: { id: todo.id, userId },
                   data: { completed: !todo.completed },
                 });
 
@@ -39,8 +54,12 @@ export default async function DashboardPage() {
               deleteTodo={async (todo) => {
                 "use server";
 
+                const { userId } = auth();
+
+                if (!userId) throw new Error("Must be logged in");
+
                 await db.todo.delete({
-                  where: { id: todo.id },
+                  where: { id: todo.id, userId },
                 });
 
                 revalidatePath("/dashboard");
