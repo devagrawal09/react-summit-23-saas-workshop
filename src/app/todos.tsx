@@ -8,11 +8,9 @@ export type Todo = {
   id: number;
 };
 
-export function AddTodoComponent() {
-  async function addTodo(title: string) {
-    console.log(`Adding todo: ${title}`);
-  }
-
+export function AddTodoComponent(props: {
+  addTodo: (title: string) => Promise<void>;
+}) {
   return (
     <>
       <form
@@ -22,7 +20,7 @@ export function AddTodoComponent() {
           const formData = new FormData(form);
           const title = formData.get("title") as string;
 
-          await addTodo(title);
+          await props.addTodo(title);
 
           form.reset();
         }}
@@ -39,11 +37,15 @@ export function AddTodoComponent() {
   );
 }
 
-export function TodoComponent({ todo }: { todo: Todo }) {
-  async function toggleCompleted(todo: Todo) {}
-
-  async function deleteTodo(todo: Todo) {}
-
+export function TodoComponent({
+  todo,
+  toggleCompleted,
+  deleteTodo,
+}: {
+  todo: Todo;
+  toggleCompleted: (todo: Todo) => Promise<void>;
+  deleteTodo: (todo: Todo) => Promise<void>;
+}) {
   return (
     <div className="todos-todo">
       <input
