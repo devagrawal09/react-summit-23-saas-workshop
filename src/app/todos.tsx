@@ -28,7 +28,11 @@ export function AddTodoComponent() {
         }}
         className="todos-form"
       >
-        <input placeholder="What needs to be done?" className="todos-input" />
+        <input
+          name="title"
+          placeholder="What needs to be done?"
+          className="todos-input"
+        />
         <button className="todos-add">Add</button>
       </form>
     </>
